@@ -3,8 +3,8 @@
 // El nombre de la caché sale de la carpeta donde está publicada la app, así varias copias en el mismo
 // GitHub (tu app, la demo, la de un cliente) no se pisan ni se borran entre sí.
 const PREFIJO = 'app|' + self.registration.scope + '|';
-const CACHE = PREFIJO + 'v2';
-const BASE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
+const CACHE = PREFIJO + 'v3';
+const BASE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(BASE); }).then(function () { return self.skipWaiting(); }));
