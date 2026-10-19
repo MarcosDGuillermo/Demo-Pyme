@@ -224,6 +224,46 @@
   #toast.visible { opacity: 1; }
   @media (prefers-reduced-motion: reduce) { #toast { transition: none; } }
 
+  /* Calendarios (mismo diseño que la app personal) */
+  .cab-lista { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+  .cab-lista h2 { margin: 0; }
+  .vista-sel { display: flex; border: 1px solid var(--linea); border-radius: 8px; overflow: hidden; flex: none; }
+  .vista-sel button { background: #fff; border: 0; padding: 6px 14px; font: inherit; font-size: .875rem; color: var(--suave); cursor: pointer; }
+  .vista-sel button[aria-pressed=true] { background: var(--acento); color: #fff; }
+  .cal-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .cal-mes { font-weight: 600; font-size: 1.0625rem; }
+  .cal-flecha { background: #fff; border: 1px solid var(--linea); border-radius: 8px; width: 44px; height: 38px; font-size: 1.375rem; line-height: 1; color: var(--tinta); cursor: pointer; }
+  .cal-sub { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 10px; font-size: .875rem; color: var(--suave); flex-wrap: wrap; }
+  .cal-semana, .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
+  .cal-semana span { text-align: center; font-size: .6875rem; color: var(--suave); text-transform: uppercase; padding-bottom: 4px; }
+  .cal-dia { aspect-ratio: 1 / 1.1; background: #fff; border: 1px solid var(--linea); border-radius: 10px; padding: 5px 2px 4px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; font: inherit; font-size: .9375rem; color: var(--tinta); cursor: pointer; min-width: 0; }
+  .cal-dia.hoy { border: 2px solid var(--acento); font-weight: 600; }
+  .cal-dia.venc { background: #fbeceb; border-color: #e5b8b3; }
+  .cal-dia.sel { background: var(--tinta); border-color: var(--tinta); color: #fff; }
+  .cal-puntos { display: flex; align-items: center; justify-content: center; gap: 2px; min-height: 10px; }
+  .punto { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+  .punto.pag { background: var(--gasto); }
+  .punto.cob { background: #2f9e63; }
+  .punto.tar { background: var(--dolar); }
+  .cal-dia.sel .punto { box-shadow: 0 0 0 1px #fff; }
+  .cal-mas { font-size: .625rem; line-height: 1; color: var(--suave); margin-left: 1px; }
+  .cal-dia.sel .cal-mas { color: #fff; }
+  .cal-leyenda { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 10px 0; font-size: .75rem; color: var(--suave); }
+  .cal-leyenda .punto { margin-right: 2px; }
+  .cal-aviso { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; background: #fff7e0; border-left: 4px solid var(--ambar); padding: 8px 12px; margin-bottom: 10px; font-size: .875rem; }
+  .cal-dia-titulo { font-size: 1rem; font-weight: 600; margin: 14px 0 8px; }
+  .cal-dia.mapa.h1 { background: #f9e3e0; border-color: #efc9c4; }
+  .cal-dia.mapa.h2 { background: #f0bbb5; border-color: #e6a39b; }
+  .cal-dia.mapa.h3 { background: #db8279; border-color: #cf6d63; }
+  .cal-dia.mapa.h4 { background: #a63a2e; border-color: #8f2f25; color: #fff; }
+  .cal-dia.mapa.hoy { border: 2px solid var(--acento); }
+  .cal-dia.mapa.elegido { box-shadow: 0 0 0 2px var(--tinta); }
+  .cal-dia.mapa .punto { box-shadow: 0 0 0 1px #fff; margin-left: 2px; }
+  .cal-monto { font-size: .625rem; line-height: 1; font-weight: 600; }
+  .sw { display: inline-block; width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--linea); vertical-align: -3px; }
+  .sw.h0 { background: #fff; } .sw.h1 { background: #f9e3e0; } .sw.h2 { background: #f0bbb5; } .sw.h3 { background: #db8279; } .sw.h4 { background: #a63a2e; }
+  .punto.chq { background: var(--ambar); }
+
   /* Empresa, cheques e IVA */
   h1 .demo-marca { font-size: .6875rem; font-weight: 600; color: var(--ambar); border: 1px solid var(--ambar); padding: 1px 6px; margin-left: 8px; vertical-align: middle; letter-spacing: .06em; }
   .etiqueta { display: inline-block; font-size: .6875rem; font-weight: 600; padding: 0 6px; border: 1px solid var(--linea); color: var(--suave); margin-left: 8px; vertical-align: 1px; letter-spacing: .02em; }
@@ -352,12 +392,35 @@
     </section>
 
     <section>
-      <h2>Últimos movimientos</h2>
+      <div class="cab-lista">
+        <h2>Últimos movimientos</h2>
+        <div class="vista-sel" role="group" aria-label="Vista de movimientos">
+          <button type="button" id="vm-lista" aria-pressed="true">Lista</button>
+          <button type="button" id="vm-mes" aria-pressed="false">Mes</button>
+        </div>
+      </div>
       <div class="filtro-cuenta"><label for="fil-mov">Cuenta</label><select id="fil-mov"></select></div>
       <div class="nota" id="fil-mov-info" hidden style="margin-bottom:10px"></div>
-      <div class="lista" id="lista"></div>
-      <div style="margin-top:10px"><button class="refrescar" id="btn-mov-mas" type="button" hidden>Ver más</button></div>
-      <div class="nota" id="mov-nota" style="margin-top:8px" hidden></div>
+      <div id="mov-lista-caja">
+        <div class="lista" id="lista"></div>
+        <div style="margin-top:10px"><button class="refrescar" id="btn-mov-mas" type="button" hidden>Ver más</button></div>
+        <div class="nota" id="mov-nota" style="margin-top:8px" hidden></div>
+      </div>
+      <div id="cal-mov" hidden>
+        <div class="cal-nav">
+          <button type="button" class="cal-flecha" id="cm-ant" aria-label="Mes anterior">‹</button>
+          <div class="cal-mes" id="cm-titulo" aria-live="polite"></div>
+          <button type="button" class="cal-flecha" id="cm-sig" aria-label="Mes siguiente">›</button>
+        </div>
+        <div class="vista-sel" id="cm-moneda" hidden style="margin-bottom:8px"></div>
+        <div class="cal-sub"><span id="cm-totales"></span><button type="button" class="anular" id="cm-hoy">Ir a hoy</button></div>
+        <div class="cal-semana" aria-hidden="true"><span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span></div>
+        <div class="cal-grid" id="cm-grid"></div>
+        <div class="cal-leyenda" id="cm-leyenda"></div>
+        <div class="nota" id="cm-nota"></div>
+        <div id="cm-avisos"></div>
+        <div id="cm-dia"></div>
+      </div>
     </section>
   </div>
 
@@ -494,8 +557,27 @@
     </section>
 
     <section>
-      <h2>Pendientes abiertos</h2>
+      <div class="cab-lista">
+        <h2>Pendientes abiertos</h2>
+        <div class="vista-sel" role="group" aria-label="Vista de pendientes">
+          <button type="button" id="vp-lista" aria-pressed="true">Lista</button>
+          <button type="button" id="vp-mes" aria-pressed="false">Mes</button>
+        </div>
+      </div>
       <div class="lista" id="lista-pen"></div>
+      <div id="cal-pen" hidden>
+        <div class="cal-nav">
+          <button type="button" class="cal-flecha" id="cal-ant" aria-label="Mes anterior">‹</button>
+          <div class="cal-mes" id="cal-titulo" aria-live="polite"></div>
+          <button type="button" class="cal-flecha" id="cal-sig" aria-label="Mes siguiente">›</button>
+        </div>
+        <div class="cal-sub"><span id="cal-totales"></span><button type="button" class="anular" id="cal-hoy">Ir a hoy</button></div>
+        <div class="cal-semana" aria-hidden="true"><span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span></div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <div class="cal-leyenda"><span><i class="punto pag"></i> A pagar</span><span><i class="punto tar"></i> Tarjeta</span><span><i class="punto chq"></i> Cheque</span><span><i class="punto cob"></i> A cobrar</span><span class="cal-venc-ley">Rosado: vencido sin registrar</span></div>
+        <div id="cal-avisos"></div>
+        <div id="cal-dia"></div>
+      </div>
     </section>
   </div>
 
@@ -1173,6 +1255,45 @@
     return ' · no aparece en la lista porque estás viendo ' + (c ? c.nombre : 'otra cuenta');
   }
 
+  function ctxMov() {
+    const nombreCuenta = {}, nombreCat = {}, porId = {};
+    estado.cuentasTodas.concat(estado.cuentas).forEach(function (c) { nombreCuenta[c.id] = c.nombre; });
+    estado.categorias.forEach(function (c) { nombreCat[c.id] = c.nombre; });
+    estado.movimientos.forEach(function (m) { porId[m.id] = m; });
+    return { nombreCuenta: nombreCuenta, nombreCat: nombreCat, porId: porId };
+  }
+
+  // Una fila de movimiento, igual en la lista y en el detalle de un día del calendario
+  function crearFilaMov(m, ctx) {
+    const transf = m.tipo === 'transf_salida' || m.tipo === 'transf_entrada';
+    const entra = m.tipo === 'ingreso' || m.tipo === 'transf_entrada';
+    const pagoTar = m.tipo === 'pago_tarjeta';
+    const fila = el('div', 'mov');
+
+    let titulo = m.descripcion || ctx.nombreCat[m.categoria] || (entra ? 'Ingreso' : 'Gasto');
+    if (transf) {
+      const par = ctx.porId[m.vinculo];
+      const otra = par ? (ctx.nombreCuenta[par.cuenta] || par.cuenta) : '';
+      const base = m.descripcion && m.descripcion !== 'Transferencia' ? m.descripcion + ' · ' : '';
+      titulo = base + 'Transferencia ' + (m.tipo === 'transf_salida' ? 'a ' : 'desde ') + otra;
+    }
+    fila.appendChild(el('div', 'desc', titulo));
+    fila.appendChild(el('div', 'monto-mov ' + (transf || pagoTar ? 'neutro' : entra ? 'ing' : 'gas'), (entra ? '+ ' : '- ') + fmt(m.monto, m.moneda)));
+
+    const partes = [fmtFecha(m.fecha), ctx.nombreCuenta[m.cuenta] || m.cuenta];
+    if (m.categoria && ctx.nombreCat[m.categoria]) partes.push(ctx.nombreCat[m.categoria]);
+    if (m.contraparte) { const cpm = estado.contrapartes.filter(function (c) { return c.id === m.contraparte; })[0]; if (cpm) partes.push(cpm.nombre); }
+    if (transf && Number(m.tc) && Number(m.tc) !== 1) partes.push('TC ' + fmt(Number(m.tc), 'ARS'));
+    fila.appendChild(el('div', 'meta', partes.join(' · ')));
+    const acc = el('div', 'acc');
+    const b = el('button', 'anular', 'Anular');
+    b.type = 'button';
+    b.addEventListener('click', function () { anularMovimiento(m, transf); });
+    acc.appendChild(b);
+    fila.appendChild(acc);
+    return fila;
+  }
+
   function renderMovimientos() {
     const cont = $('lista');
     cont.innerHTML = '';
@@ -1203,40 +1324,198 @@
       cont.appendChild(el('div', 'vacio', filtroMov ? 'No hay movimientos recientes en esta cuenta.' : 'Todavía no cargaste movimientos. Usá el formulario de arriba para el primero.'));
       return;
     }
-    const nombreCuenta = {}, nombreCat = {}, porId = {};
-    estado.cuentasTodas.concat(estado.cuentas).forEach(function (c) { nombreCuenta[c.id] = c.nombre; });
-    estado.categorias.forEach(function (c) { nombreCat[c.id] = c.nombre; });
-    estado.movimientos.forEach(function (m) { porId[m.id] = m; });
-
-    visibles.forEach(function (m) {
-      const transf = m.tipo === 'transf_salida' || m.tipo === 'transf_entrada';
-      const entra = m.tipo === 'ingreso' || m.tipo === 'transf_entrada';
-      const pagoTar = m.tipo === 'pago_tarjeta';
-      const fila = el('div', 'mov');
-
-      let titulo = m.descripcion || nombreCat[m.categoria] || (entra ? 'Ingreso' : 'Gasto');
-      if (transf) {
-        const par = porId[m.vinculo];
-        const otra = par ? (nombreCuenta[par.cuenta] || par.cuenta) : '';
-        const base = m.descripcion && m.descripcion !== 'Transferencia' ? m.descripcion + ' · ' : '';
-        titulo = base + 'Transferencia ' + (m.tipo === 'transf_salida' ? 'a ' : 'desde ') + otra;
-      }
-      fila.appendChild(el('div', 'desc', titulo));
-      fila.appendChild(el('div', 'monto-mov ' + (transf || pagoTar ? 'neutro' : entra ? 'ing' : 'gas'), (entra ? '+ ' : '- ') + fmt(m.monto, m.moneda)));
-
-      const partes = [fmtFecha(m.fecha), nombreCuenta[m.cuenta] || m.cuenta];
-      if (m.categoria && nombreCat[m.categoria]) partes.push(nombreCat[m.categoria]);
-      if (transf && Number(m.tc) && Number(m.tc) !== 1) partes.push('TC ' + fmt(Number(m.tc), 'ARS'));
-      fila.appendChild(el('div', 'meta', partes.join(' · ')));
-      const acc = el('div', 'acc');
-      const b = el('button', 'anular', 'Anular');
-      b.type = 'button';
-      b.addEventListener('click', function () { anularMovimiento(m, transf); });
-      acc.appendChild(b);
-      fila.appendChild(acc);
-      cont.appendChild(fila);
-    });
+    const ctx = ctxMov();
+    visibles.forEach(function (m) { cont.appendChild(crearFilaMov(m, ctx)); });
   }
+
+  // ================= MAPA DE CALOR DE MOVIMIENTOS =================
+  const MOV_DIAS_APP = 90;     // igual que el script: la pantalla recibe los movimientos de los últimos 90 días
+  let vistaMov = (function () { try { return localStorage.getItem(clave('vista_mov')) === 'mes' ? 'mes' : 'lista'; } catch (e) { return 'lista'; } })();
+  let mesMov = '', diaMov = '', monedaMapa = '';
+
+  function aplicarVistaMov() {
+    const mes = vistaMov === 'mes';
+    $('mov-lista-caja').hidden = mes;
+    $('cal-mov').hidden = !mes;
+    $('vm-lista').setAttribute('aria-pressed', String(!mes));
+    $('vm-mes').setAttribute('aria-pressed', String(mes));
+  }
+  function cambiarVistaMov(v) {
+    vistaMov = v;
+    try { localStorage.setItem(clave('vista_mov'), v); } catch (e) { /* sin espacio: se sigue igual */ }
+    aplicarVistaMov();
+    renderMapaMov();
+  }
+
+  // 1.234.567 -> "1,2M", 45.000 -> "45k", 1.500 -> "1,5k", 800 -> "800"
+  function cortoMonto(n) {
+    const a = Math.abs(n);
+    if (a >= 995000) return (Math.round(a / 1e5) / 10).toString().replace('.', ',') + 'M';
+    if (a >= 1e4) return Math.round(a / 1e3) + 'k';
+    if (a >= 1e3) return (Math.round(a / 100) / 10).toString().replace('.', ',') + 'k';
+    return String(Math.round(a));
+  }
+
+  // Gasto = movimientos "gasto" + compras con tarjeta (en la fecha de la compra). Las transferencias y los pagos de
+  // resumen no cuentan: mueven plata entre cuentas o saldan una compra que ya se contó.
+  function datosMapa(mes, mon) {
+    const dias = {};
+    const dia = function (iso) { return dias[iso] = dias[iso] || { gasto: 0, ingreso: 0, movs: [], compras: [] }; };
+    estado.movimientos.forEach(function (m) {
+      if (m.moneda !== mon || String(m.fecha).slice(0, 7) !== mes) return;
+      if (filtroMov && m.cuenta !== filtroMov) return;
+      const d = dia(m.fecha);
+      d.movs.push(m);
+      if (m.tipo === 'gasto') d.gasto += Number(m.monto);
+      else if (m.tipo === 'ingreso') d.ingreso += Number(m.monto);
+    });
+    if (!filtroMov) {      // con una cuenta elegida no entran: no salen de la cuenta hasta que se paga el resumen
+      estado.compras.forEach(function (c) {
+        if (c.moneda !== mon || String(c.fecha).slice(0, 7) !== mes) return;
+        const d = dia(c.fecha);
+        d.compras.push(c);
+        d.gasto += Number(c.monto);
+      });
+    }
+    return dias;
+  }
+
+  function monedasMapa() {
+    if (filtroMov) {
+      const c = estado.cuentasTodas.filter(function (x) { return x.id === filtroMov; })[0];
+      return [c ? c.moneda : 'ARS'];
+    }
+    const set = {};
+    estado.movimientos.forEach(function (m) { set[m.moneda] = 1; });
+    estado.compras.forEach(function (c) { set[c.moneda] = 1; });
+    const l = ordenMonedas(Object.keys(set));
+    return l.length ? l : ['ARS'];
+  }
+
+  function restarDiasIso(iso, n) {
+    const p = iso.split('-').map(Number);
+    return new Date(p[0], p[1] - 1, p[2] - n).toLocaleDateString('sv-SE');
+  }
+
+  function crearFilaCompra(c) {
+    const nombreCat = {};
+    estado.categorias.forEach(function (x) { nombreCat[x.id] = x.nombre; });
+    const n = Number(c.cuotas) || 1;
+    const fila = el('div', 'mov');
+    fila.appendChild(el('div', 'desc', c.descripcion));
+    fila.appendChild(el('div', 'monto-mov gas', '- ' + fmt(c.monto, c.moneda)));
+    const partes = [fmtFecha(c.fecha), 'Compra con tarjeta · ' + nombreTarjeta(c.tarjeta)];
+    if (c.categoria && nombreCat[c.categoria]) partes.push(nombreCat[c.categoria]);
+    partes.push(n > 1 ? n + ' cuotas' : 'En 1 pago');
+    fila.appendChild(el('div', 'meta', partes.join(' · ')));
+    const acc = el('div', 'acc');
+    const b = el('button', 'anular', 'Anular');
+    b.type = 'button';
+    b.addEventListener('click', function () { anularCompra(c); });
+    acc.appendChild(b);
+    fila.appendChild(acc);
+    return fila;
+  }
+
+  function renderMapaMov() {
+    if (vistaMov !== 'mes') return;
+    const hoyIso = hoy();
+    if (!mesMov) mesMov = hoyIso.slice(0, 7);
+    const monedas = monedasMapa();
+    if (monedas.indexOf(monedaMapa) < 0) monedaMapa = monedas[0];
+    const mon = monedaMapa;
+
+    const pm = $('cm-moneda');
+    pm.innerHTML = '';
+    pm.hidden = monedas.length < 2;
+    monedas.forEach(function (x) {
+      const b = el('button', '', nombreMoneda(x));
+      b.type = 'button';
+      b.setAttribute('aria-pressed', String(x === mon));
+      b.addEventListener('click', function () { monedaMapa = x; diaMov = ''; renderMapaMov(); });
+      pm.appendChild(b);
+    });
+
+    const dias = datosMapa(mesMov, mon);
+    const y = Number(mesMov.slice(0, 4)), m = Number(mesMov.slice(5, 7));
+    const diasMes = new Date(y, m, 0).getDate();
+    const desfase = (new Date(y, m - 1, 1).getDay() + 6) % 7;     // la semana empieza el lunes
+    const activos = Object.keys(dias).filter(function (d) { return dias[d].gasto > 0; });
+    const totalGasto = activos.reduce(function (a, d) { return a + dias[d].gasto; }, 0);
+    const totalIng = Object.keys(dias).reduce(function (a, d) { return a + dias[d].ingreso; }, 0);
+    const prom = activos.length ? totalGasto / activos.length : 0;
+    // el color depende de cuánto es ese día respecto del promedio de los días en que gastaste
+    const nivel = function (g) { return g <= 0 ? 0 : g < 0.5 * prom ? 1 : g < 1.5 * prom ? 2 : g < 3 * prom ? 3 : 4; };
+
+    $('cm-titulo').textContent = nombreMes(mesMov + '-01').replace(/^./, function (c) { return c.toUpperCase(); });
+    $('cm-totales').textContent = 'Gastos ' + fmt0(totalGasto, mon) + ' · Ingresos ' + fmt0(totalIng, mon);
+    if (!diaMov || diaMov.slice(0, 7) !== mesMov) {
+      diaMov = mesMov === hoyIso.slice(0, 7) ? hoyIso
+        : (activos.slice().sort(function (a, b) { return dias[b].gasto - dias[a].gasto; })[0] || mesMov + '-01');
+    }
+
+    const grid = $('cm-grid');
+    grid.innerHTML = '';
+    for (let i = 0; i < desfase; i++) grid.appendChild(el('div', 'cal-vacio'));
+    for (let d = 1; d <= diasMes; d++) {
+      const iso = mesMov + '-' + ('0' + d).slice(-2);
+      const dd = dias[iso] || { gasto: 0, ingreso: 0 };
+      const b = el('button', 'cal-dia mapa h' + nivel(dd.gasto) + (iso === hoyIso ? ' hoy' : '') + (iso === diaMov ? ' elegido' : ''));
+      b.type = 'button';
+      b.setAttribute('aria-pressed', iso === diaMov ? 'true' : 'false');
+      b.setAttribute('aria-label', new Date(y, m - 1, d).toLocaleDateString('es-AR', { day: 'numeric', month: 'long' }) + ': ' +
+        (dd.gasto > 0 ? 'gastos ' + fmt0(dd.gasto, mon) : 'sin gastos') + (dd.ingreso > 0 ? ', ingresos ' + fmt0(dd.ingreso, mon) : ''));
+      b.appendChild(el('span', 'cal-num', String(d)));
+      const pie = el('span', 'cal-puntos');
+      if (dd.gasto > 0) pie.appendChild(el('span', 'cal-monto', cortoMonto(dd.gasto)));
+      if (dd.ingreso > 0) pie.appendChild(el('i', 'punto cob'));
+      b.appendChild(pie);
+      b.addEventListener('click', function () { diaMov = iso; renderMapaMov(); });
+      grid.appendChild(b);
+    }
+
+    const ley = $('cm-leyenda');
+    ley.innerHTML = '';
+    ley.appendChild(el('span', '', 'Menos gasto '));
+    ['h1', 'h2', 'h3', 'h4'].forEach(function (c) { const s = el('i', 'sw ' + c); ley.lastChild.appendChild(s); ley.lastChild.appendChild(document.createTextNode(' ')); });
+    ley.lastChild.appendChild(document.createTextNode('más gasto'));
+    const ing = el('span', '');
+    ing.appendChild(el('i', 'punto cob'));
+    ing.appendChild(document.createTextNode(' Ingreso'));
+    ley.appendChild(ing);
+    ley.appendChild(el('span', '', prom > 0 ? 'Promedio por día con gasto: ' + fmt0(prom, mon) : 'Sin gastos este mes'));
+    $('cm-nota').textContent = filtroMov
+      ? 'Con una cuenta elegida no se cuentan las compras con tarjeta: no salen de la cuenta hasta que pagás el resumen.'
+      : 'Incluye las compras con tarjeta en la fecha en que las hiciste. Las transferencias y los pagos de resumen no cuentan como gasto.';
+
+    const av = $('cm-avisos');
+    av.innerHTML = '';
+    if (mesMov + '-01' < restarDiasIso(hoyIso, MOV_DIAS_APP)) {
+      const f = el('div', 'cal-aviso');
+      f.appendChild(el('span', '', 'La app carga los movimientos de los últimos ' + MOV_DIAS_APP + ' días: los de este mes pueden estar incompletos. El historial completo está en la planilla.'));
+      av.appendChild(f);
+    }
+
+    // detalle del día elegido
+    const det = $('cm-dia');
+    det.innerHTML = '';
+    const dd = dias[diaMov] || { gasto: 0, ingreso: 0, movs: [], compras: [] };
+    const cant = dd.movs.length + dd.compras.length;
+    const p = diaMov.split('-').map(Number);
+    let titulo = new Date(p[0], p[1] - 1, p[2]).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
+    titulo = titulo.charAt(0).toUpperCase() + titulo.slice(1);
+    det.appendChild(el('h3', 'cal-dia-titulo', titulo + (cant ? ' · ' + cant + (cant === 1 ? ' movimiento' : ' movimientos') : '') + (dd.gasto > 0 ? ' · gastos ' + fmt0(dd.gasto, mon) : '')));
+    const caja = el('div', 'lista');
+    if (!cant) {
+      caja.appendChild(el('div', 'vacio', 'No hay movimientos este día.'));
+    } else {
+      const ctx = ctxMov();
+      dd.movs.slice().sort(function (a, b) { return b._fila - a._fila; }).forEach(function (mv) { caja.appendChild(crearFilaMov(mv, ctx)); });
+      dd.compras.forEach(function (c) { caja.appendChild(crearFilaCompra(c)); });
+    }
+    det.appendChild(caja);
+  }
+
 
   // ================= PENDIENTES =================
   function abiertos() {
@@ -1338,6 +1617,165 @@
     });
   }
 
+  // ================= CALENDARIO DE PENDIENTES =================
+  let vistaPen = (function () { try { return localStorage.getItem(clave('vista_pen')) === 'mes' ? 'mes' : 'lista'; } catch (e) { return 'lista'; } })();
+  let mesCal = '', diaCal = '';
+
+  function aplicarVistaPen() {
+    const mes = vistaPen === 'mes';
+    $('lista-pen').hidden = mes;
+    $('cal-pen').hidden = !mes;
+    $('vp-lista').setAttribute('aria-pressed', String(!mes));
+    $('vp-mes').setAttribute('aria-pressed', String(mes));
+  }
+  function cambiarVistaPen(v) {
+    vistaPen = v;
+    try { localStorage.setItem(clave('vista_pen'), v); } catch (e) { /* sin espacio: se sigue igual */ }
+    aplicarVistaPen();
+    renderCalendarioPen();
+  }
+
+  function tipoPunto(p) { return p.esCheque ? 'chq' : p.esResumen ? 'tar' : (p.tipo === 'a_cobrar' ? 'cob' : 'pag'); }
+
+  // Cheques abiertos como ítems del calendario, en su fecha de pago: los de terceros se cobran, los propios se debitan.
+  // Respeta el filtro de cuenta de la pestaña (la cuenta donde se depositó o de donde se debita).
+  function chequesCalendario() {
+    return chequesAbiertos().filter(function (ch) {
+      if (!filtroPen) return true;
+      return filtroPen === '__sin__' ? !ch.cuenta : ch.cuenta === filtroPen;
+    }).map(function (ch) {
+      return { esCheque: true, ch: ch, id: ch.id, vencimiento: ch.fecha_pago, moneda: ch.moneda, monto: Number(ch.monto),
+               tipo: ch.origen === 'tercero' ? 'a_cobrar' : 'a_pagar' };
+    });
+  }
+  function saldoCal(p) { return p.esCheque ? p.monto : saldoItem(p); }
+  function accionesCheque(ch) {
+    if (ch.origen === 'propio') return [['Ya se debitó', accDebitar], ['Anular', accAnular]];
+    if (ch.estado === 'depositado') return [['Ya se acreditó', accAcreditar], ['Marcar rechazado', accRechazar]];
+    return [['Depositar', accDepositar], ['Endosar a un proveedor', accEndosar], ['Marcar rechazado', accRechazar], ['Anular', accAnular]];
+  }
+
+  // Hasta 3 puntos por día: primero uno por cada tipo presente (a pagar, tarjeta, a cobrar) y, si hay más ítems, se repiten
+  function puntosDia(lista) {
+    const orden = ['pag', 'tar', 'chq', 'cob'];
+    const resto = { pag: 0, tar: 0, chq: 0, cob: 0 };
+    lista.forEach(function (p) { resto[tipoPunto(p)]++; });
+    const puntos = orden.filter(function (t) { return resto[t] > 0; });
+    puntos.forEach(function (t) { resto[t]--; });
+    while (puntos.length < 3) {
+      const t = orden.filter(function (x) { return resto[x] > 0; }).sort(function (a, b) { return resto[b] - resto[a]; })[0];
+      if (!t) break;
+      puntos.push(t); resto[t]--;
+    }
+    return puntos.sort(function (a, b) { return orden.indexOf(a) - orden.indexOf(b); });
+  }
+
+  function renderCalendarioPen() {
+    if (vistaPen !== 'mes') return;
+    const hoyIso = hoy();
+    if (!mesCal) mesCal = hoyIso.slice(0, 7);
+    const todos = itemsLista(true).concat(chequesCalendario());   // respeta el filtro de cuenta de la pestaña
+    const porDia = {};
+    todos.forEach(function (p) {
+      if (p.vencimiento && p.vencimiento.slice(0, 7) === mesCal) (porDia[p.vencimiento] = porDia[p.vencimiento] || []).push(p);
+    });
+    const y = Number(mesCal.slice(0, 4)), m = Number(mesCal.slice(5, 7));
+    const diasMes = new Date(y, m, 0).getDate();
+    const desfase = (new Date(y, m - 1, 1).getDay() + 6) % 7;   // la semana empieza el lunes
+
+    $('cal-titulo').textContent = nombreMes(mesCal + '-01').replace(/^./, function (c) { return c.toUpperCase(); });
+    // el día elegido se conserva si es de este mes; si no: hoy (en el mes actual) o el primer día con vencimientos
+    if (!diaCal || diaCal.slice(0, 7) !== mesCal) {
+      diaCal = mesCal === hoyIso.slice(0, 7) ? hoyIso : (Object.keys(porDia).sort()[0] || mesCal + '-01');
+    }
+
+    // totales del mes
+    const tot = {};
+    Object.keys(porDia).forEach(function (d) {
+      porDia[d].forEach(function (p) {
+        const t = tot[p.moneda] = tot[p.moneda] || { pagar: 0, cobrar: 0, chqCobrar: 0, chqPagar: 0 };
+        if (p.esCheque) { if (p.tipo === 'a_cobrar') t.chqCobrar += p.monto; else t.chqPagar += p.monto; return; }
+        if (p.tipo === 'a_cobrar') t.cobrar += saldoItem(p); else t.pagar += saldoItem(p);
+      });
+    });
+    const monedas = ordenMonedas(Object.keys(tot));
+    $('cal-totales').textContent = monedas.length
+      ? monedas.map(function (mon) {
+          const t = tot[mon];
+          return 'A pagar ' + fmt0(t.pagar, mon) + ' · A cobrar ' + fmt0(t.cobrar, mon) +
+            (t.chqCobrar > 0.001 ? ' · Cheques a cobrar ' + fmt0(t.chqCobrar, mon) : '') +
+            (t.chqPagar > 0.001 ? ' · Cheques a debitar ' + fmt0(t.chqPagar, mon) : '') + (monedas.length > 1 ? ' (' + mon + ')' : '');
+        }).join('  |  ')
+      : 'Sin vencimientos este mes';
+
+    // grilla
+    const grid = $('cal-grid');
+    grid.innerHTML = '';
+    for (let i = 0; i < desfase; i++) grid.appendChild(el('div', 'cal-vacio'));
+    for (let d = 1; d <= diasMes; d++) {
+      const iso = mesCal + '-' + ('0' + d).slice(-2);
+      const lista = porDia[iso] || [];
+      const b = el('button', 'cal-dia' + (iso === hoyIso ? ' hoy' : '') + (iso === diaCal ? ' sel' : '') + (lista.length && iso < hoyIso ? ' venc' : ''));
+      b.type = 'button';
+      b.setAttribute('aria-pressed', iso === diaCal ? 'true' : 'false');
+      b.setAttribute('aria-label', new Date(y, m - 1, d).toLocaleDateString('es-AR', { day: 'numeric', month: 'long' }) + ': ' +
+        (lista.length ? lista.length + (lista.length === 1 ? ' vencimiento' : ' vencimientos') : 'sin vencimientos') +
+        (lista.some(function (x) { return x.esCheque; }) ? ', con cheques' : ''));
+      b.appendChild(el('span', 'cal-num', String(d)));
+      const pt = el('span', 'cal-puntos');
+      if (lista.length) {
+        const puntos = puntosDia(lista);
+        puntos.forEach(function (t) { pt.appendChild(el('i', 'punto ' + t)); });
+        const extra = lista.length - puntos.length;
+        if (extra > 0) pt.appendChild(el('span', 'cal-mas', '+' + extra));
+      }
+      b.appendChild(pt);
+      b.addEventListener('click', function () { diaCal = iso; renderCalendarioPen(); });
+      grid.appendChild(b);
+    }
+
+    // avisos: lo que el calendario no puede mostrar en este mes
+    const av = $('cal-avisos');
+    av.innerHTML = '';
+    const avisar = function (texto) {
+      const f = el('div', 'cal-aviso');
+      f.appendChild(el('span', '', texto));
+      const bt = el('button', 'anular', 'Ver en la lista');
+      bt.type = 'button';
+      bt.addEventListener('click', function () { cambiarVistaPen('lista'); });
+      f.appendChild(bt);
+      av.appendChild(f);
+    };
+    if (mesCal >= hoyIso.slice(0, 7)) {
+      const ant = todos.filter(function (p) { return p.vencimiento && p.vencimiento < mesCal + '-01' && p.vencimiento < hoyIso; });
+      if (ant.length) avisar(ant.length + (ant.length === 1 ? ' vencimiento de meses anteriores sin registrar' : ' vencimientos de meses anteriores sin registrar'));
+    }
+    const sinFecha = todos.filter(function (p) { return !p.vencimiento; });
+    if (sinFecha.length) avisar(sinFecha.length + (sinFecha.length === 1 ? ' pendiente sin fecha de vencimiento no aparece' : ' pendientes sin fecha de vencimiento no aparecen') + ' en el calendario');
+
+    // detalle del día elegido, con los mismos botones que la lista
+    const det = $('cal-dia');
+    det.innerHTML = '';
+    const lDia = (porDia[diaCal] || []).slice().sort(function (a, b) {
+      const ca = a.tipo === 'a_cobrar' ? 1 : 0, cb = b.tipo === 'a_cobrar' ? 1 : 0;
+      return ca !== cb ? ca - cb : saldoCal(b) - saldoCal(a);
+    });
+    const p = diaCal.split('-').map(Number);
+    let titulo = new Date(p[0], p[1] - 1, p[2]).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
+    titulo = titulo.charAt(0).toUpperCase() + titulo.slice(1);
+    det.appendChild(el('h3', 'cal-dia-titulo', titulo + (lDia.length ? ' · ' + lDia.length + (lDia.length === 1 ? ' vencimiento' : ' vencimientos') : '') + (lDia.length && diaCal < hoyIso ? ' · vencidos' : '')));
+    const caja = el('div', 'lista');
+    if (!lDia.length) {
+      caja.appendChild(el('div', 'vacio', 'No hay vencimientos este día.'));
+    } else {
+      const nombreCp = {};
+      estado.contrapartes.forEach(function (c) { nombreCp[c.id] = c.nombre; });
+      agregarFilasPen(caja, lDia.filter(function (x) { return !x.esCheque; }), nombreCp, true);
+      lDia.filter(function (x) { return x.esCheque; }).forEach(function (x) { caja.appendChild(filaCheque(x.ch, accionesCheque(x.ch))); });
+    }
+    det.appendChild(caja);
+  }
+
   function renderListaPen() {
     const cont = $('lista-pen');
     cont.innerHTML = '';
@@ -1367,13 +1805,13 @@
     }
   }
 
-  function agregarFilasPen(cont, lista, nombreCp) {
+  function agregarFilasPen(cont, lista, nombreCp, sinMes) {
     let mesActual = null;
     lista.forEach(function (p) {
       const clave = p.vencimiento ? p.vencimiento.slice(0, 7) : 'sin';
       if (clave !== mesActual) {
         mesActual = clave;
-        cont.appendChild(el('div', 'mes-titulo', clave === 'sin' ? 'Sin vencimiento' : nombreMes(p.vencimiento)));
+        if (!sinMes) cont.appendChild(el('div', 'mes-titulo', clave === 'sin' ? 'Sin vencimiento' : nombreMes(p.vencimiento)));
       }
       if (p.esResumen) { cont.appendChild(filaResumen(p)); return; }
       const saldo = estado.saldoPen[p.id];
@@ -2208,9 +2646,13 @@
     renderCuentas();
     renderFiltrosCuenta();
     renderMovimientos();
+    renderMapaMov();
+    aplicarVistaMov();
     renderContrapartes();
     renderResumenPen();
     renderListaPen();
+    renderCalendarioPen();
+    aplicarVistaPen();
     renderProyeccion();
     renderResumen();
     renderCategoriasPen();
@@ -4097,12 +4539,22 @@
   });
   $('btn-refrescar').addEventListener('click', function () { reintentoManual = true; cargar(); });
   $('fil-mov').addEventListener('change', function () {
-    filtroMov = this.value; movVisibles = MOV_PAGINA; renderMovimientos();
+    filtroMov = this.value; movVisibles = MOV_PAGINA; renderMovimientos(); renderMapaMov();
     // al mirar una cuenta, el formulario de carga arranca en esa misma cuenta
     if (filtroMov && cuentaPorId(filtroMov)) { $('cuenta').value = filtroMov; actualizarFormMov(); }
   });
   $('btn-mov-mas').addEventListener('click', function () { movVisibles += MOV_PAGINA; renderMovimientos(); });
-  $('fil-pen').addEventListener('change', function () { filtroPen = this.value; renderResumenPen(); renderListaPen(); });
+  $('fil-pen').addEventListener('change', function () { filtroPen = this.value; renderResumenPen(); renderListaPen(); renderCalendarioPen(); });
+  $('vm-lista').addEventListener('click', function () { cambiarVistaMov('lista'); });
+  $('vm-mes').addEventListener('click', function () { cambiarVistaMov('mes'); });
+  $('cm-ant').addEventListener('click', function () { mesMov = sumarMeses((mesMov || hoy().slice(0, 7)) + '-01', -1).slice(0, 7); renderMapaMov(); });
+  $('cm-sig').addEventListener('click', function () { mesMov = sumarMeses((mesMov || hoy().slice(0, 7)) + '-01', 1).slice(0, 7); renderMapaMov(); });
+  $('cm-hoy').addEventListener('click', function () { mesMov = hoy().slice(0, 7); diaMov = hoy(); renderMapaMov(); });
+  $('vp-lista').addEventListener('click', function () { cambiarVistaPen('lista'); });
+  $('vp-mes').addEventListener('click', function () { cambiarVistaPen('mes'); });
+  $('cal-ant').addEventListener('click', function () { mesCal = sumarMeses((mesCal || hoy().slice(0, 7)) + '-01', -1).slice(0, 7); renderCalendarioPen(); });
+  $('cal-sig').addEventListener('click', function () { mesCal = sumarMeses((mesCal || hoy().slice(0, 7)) + '-01', 1).slice(0, 7); renderCalendarioPen(); });
+  $('cal-hoy').addEventListener('click', function () { mesCal = hoy().slice(0, 7); diaCal = hoy(); renderCalendarioPen(); });
   $('btn-cola-enviar').addEventListener('click', function () { reintentoManual = true; cargar(); });
   window.addEventListener('online', function () { cargar(); });
   document.addEventListener('visibilitychange', function () { if (!document.hidden && leerCola().length) cargar(); });
